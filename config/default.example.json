@@ -9,12 +9,7 @@
   },
   // Database Config
   "db": {
-    "url": "mongodb://localhost:27017/default_app_name"
-  },
-  // IMAP config
-  "imap": {
-    "host": "203.129.195.133",
-    "port": 143
+    "url": "mongodb://localhost:27017/notes"
   },
   // Logging Config
   "logs": {

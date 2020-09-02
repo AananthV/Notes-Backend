@@ -70,90 +70,45 @@ class AuthController implements Controller {
     const { email, password }: LoginUserDto = req.body;
 
     let oldUser = await this.user.findOne({ email: email });
-    const isWebmail = /^[a-zA-Z0-9._%+-]+@nitt+\.edu$/.test(email);
     let returnUser: User;
 
-    if (isWebmail) {
-      try {
-        let rollNumber = email.split("@")[0];
-
-        // Authenticate with IMAP
-        let imapResponse = await this.imapAuthenticate(rollNumber, password);
-        if (oldUser == null) {
-          // Register with IMAP
-          let user = {
-            email: email,
-            password: "",
-            username: rollNumber,
-            mobileNumber: "",
-            isVerified: true,
-            verificationCode: "",
-            passwordResetToken: "",
-            lastUpdate: new Date(),
-          };
-
-          let newUser = await this.user.create(user);
-
-          returnUser = newUser;
-        } else {
-          returnUser = oldUser;
-        }
-
-        const tokenData = this.createToken(returnUser);
+    if (oldUser == null) {
+      // if user doesn't exist
+      return next(
+        new HttpException({
+          status: 404,
+          message: "User not found!",
+          logger: this.logger,
+        })
+      );
+    } else if (!oldUser.isVerified) {
+      // if user isn't verified yet
+      return next(
+        new HttpException({
+          status: 401,
+          message: "Email not verified!",
+          logger: this.logger,
+        })
+      );
+    } else {
+      let match = bcrypt.compare(password, oldUser.password);
+      if (match) {
+        // if passwords match
+        const tokenData = this.createToken(oldUser);
         res.setHeader("Set-Cookie", [this.createCookie(tokenData)]);
         return res.status(200).jsonp({
           status: 200,
           success: true,
           msg: "User successfully logged in!",
         });
-      } catch (err) {
-        return next(
-          new HttpException({
-            status: 401,
-            message: "Invalid webmail credentials!",
-            logger: this.logger,
-          })
-        );
-      }
-    } else {
-      if (oldUser == null) {
-        // if user doesn't exist
-        return next(
-          new HttpException({
-            status: 404,
-            message: "User not found!",
-            logger: this.logger,
-          })
-        );
-      } else if (!oldUser.isVerified) {
-        // if user isn't verified yet
-        return next(
-          new HttpException({
-            status: 401,
-            message: "Email not verified!",
-            logger: this.logger,
-          })
-        );
       } else {
-        let match = bcrypt.compare(password, oldUser.password);
-        if (match) {
-          // if passwords match
-          const tokenData = this.createToken(oldUser);
-          res.setHeader("Set-Cookie", [this.createCookie(tokenData)]);
-          return res.status(200).jsonp({
-            status: 200,
-            success: true,
-            msg: "User successfully logged in!",
-          });
-        } else {
-          return next(
-            new HttpException({
-              status: 401,
-              message: "Password is incorrect!",
-              logger: this.logger,
-            })
-          );
-        }
+        return next(
+          new HttpException({
+            status: 401,
+            message: "Password is incorrect!",
+            logger: this.logger,
+          })
+        );
       }
     }
   };
@@ -265,6 +220,9 @@ class AuthController implements Controller {
             })
           );
         }
+      } else {
+        newUser.isVerified = true;
+        newUser.save();
       }
 
       const tokenData = this.createToken(newUser);
@@ -293,41 +251,30 @@ class AuthController implements Controller {
   ) => {
     try {
       const { email }: ForgotPasswordDto = req.body;
-      let isWebmail = /^[a-zA-Z0-9._%+-]+@nitt+\.edu$/.test(email);
 
-      if (isWebmail) {
+      let user = await this.user.findOne({ email: email });
+
+      if (!user) {
         return next(
           new HttpException({
             status: 400,
-            message: "Webmail password can't be changed!",
+            message: "Email not registered!",
             logger: this.logger,
           })
         );
-      } else {
-        let user = await this.user.findOne({ email: email });
-
-        if (!user) {
-          return next(
-            new HttpException({
-              status: 400,
-              message: "Email not registered!",
-              logger: this.logger,
-            })
-          );
-        }
-
-        let uniq_id = await this.generateRandomString(15);
-        user.passwordResetToken = uniq_id;
-        await user.save();
-        await sendMailForNewPassword(email, uniq_id);
-
-        return res.status(200).jsonp({
-          status: 200,
-          success: true,
-          msg:
-            "An email for resetting password link has been sent to your registered email!",
-        });
       }
+
+      let uniq_id = await this.generateRandomString(15);
+      user.passwordResetToken = uniq_id;
+      await user.save();
+      await sendMailForNewPassword(email, uniq_id);
+
+      return res.status(200).jsonp({
+        status: 200,
+        success: true,
+        msg:
+          "An email for resetting password link has been sent to your registered email!",
+      });
     } catch (err) {
       return next(
         new HttpException({
@@ -479,30 +426,6 @@ class AuthController implements Controller {
   private createCookie(tokenData: TokenData) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
-
-  private imapAuthenticate = async (username: string, password: string) => {
-    let imap = new Imap({
-      user: username,
-      password: password,
-      host: config.get<string>("imap.host"),
-      port: config.get<number>("imap.port"),
-      tls: false,
-      authTimeout: 30000,
-    });
-
-    return new Promise((resolve, reject) => {
-      imap.once("ready", () => {
-        imap.end();
-        resolve(true);
-      });
-
-      imap.once("error", (error: Error) => {
-        reject(error);
-      });
-
-      imap.connect();
-    });
-  };
 }
 
 export default AuthController;
