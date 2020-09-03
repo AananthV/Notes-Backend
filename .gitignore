@@ -5,3 +5,4 @@ logs/logs*
 package-lock.json
 config/production.json
 config/default.json
+server.js

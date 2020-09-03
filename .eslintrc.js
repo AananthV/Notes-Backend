@@ -10,6 +10,7 @@ module.exports = {
       "plugin:prettier/recommended"
     ],
     rules: {
-      "eol-last": 2
+      "eol-last": 2,
+      "@typescript-eslint/ban-ts-comment": "off"
     }
   };

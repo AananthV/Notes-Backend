@@ -2,6 +2,10 @@ import * as mongoose from 'mongoose';
 import Note from '../Interfaces/model/note.interface';
 
 const noteSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        default: 'Untitled',
+    },
     sections: [
         {
             type: mongoose.Types.ObjectId,
