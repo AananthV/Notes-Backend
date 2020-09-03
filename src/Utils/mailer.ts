@@ -1,44 +1,38 @@
-import config from "config";
-import sgMail from "@sendgrid/mail";
+import config from 'config';
+import sgMail from '@sendgrid/mail';
 
-const sendVerificationMail = async (
-  email: string,
-  verificationCode: string
-) => {
-  let html = getMailVerificationHtml(
-    //prettier-ignore
-    `${config.get<string>("server.domain")}${config.get<string>("server.proxy")}/api/auth/verify?email=${email}&code=${verificationCode}`
-  );
-  sgMail.setApiKey(config.get<string>("mail.sendgrid_key"));
-  const data = {
-    from: config.get<string>("mail.from_address"),
-    to: email,
-    // Customise this
-    subject: "Verify your email : <Event Name> - <Domain> <Year>",
-    html: html,
-  };
-  return sgMail.send(data);
+const sendVerificationMail = async (email: string, verificationCode: string) => {
+    const html = getMailVerificationHtml(
+        //prettier-ignore
+        `${config.get<string>("server.domain")}${config.get<string>("server.proxy")}/api/auth/verify?email=${email}&code=${verificationCode}`,
+    );
+    sgMail.setApiKey(config.get<string>('mail.sendgrid_key'));
+    const data = {
+        from: config.get<string>('mail.from_address'),
+        to: email,
+        // Customise this
+        subject: 'Verify your email : <Event Name> - <Domain> <Year>',
+        html: html,
+    };
+    return sgMail.send(data);
 };
 
 const sendMailForNewPassword = (email: string, uniq_id: string) => {
-  sgMail.setApiKey(config.get<string>("mail.sendgrid_key"));
-  const data = {
-    from: config.get<string>("mail.from_address"),
-    to: email,
-    subject: "Password Reset",
-    html: `You have requested to change your password,click the link ${
-      config.get<string>("server.domain") +
-      config.get<string>("server.proxy") +
-      "/user/resetPassword/" +
-      uniq_id
-    } to reset your password !`,
-  };
-  return sgMail.send(data);
+    sgMail.setApiKey(config.get<string>('mail.sendgrid_key'));
+    const data = {
+        from: config.get<string>('mail.from_address'),
+        to: email,
+        subject: 'Password Reset',
+        html: `You have requested to change your password,click the link ${
+            config.get<string>('server.domain') + config.get<string>('server.proxy') + '/user/resetPassword/' + uniq_id
+        } to reset your password !`,
+    };
+    return sgMail.send(data);
 };
 
 const getMailVerificationHtml = (link: string) => {
-  // Change the EDIT THIS parts to customise the template.
-  let html = `
+    // Change the EDIT THIS parts to customise the template.
+    const html = `
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
@@ -159,7 +153,7 @@ const getMailVerificationHtml = (link: string) => {
       </html>
       `;
 
-  return html;
+    return html;
 };
 
 export { sendMailForNewPassword, sendVerificationMail };
