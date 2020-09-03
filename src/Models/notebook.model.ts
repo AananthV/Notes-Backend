@@ -6,6 +6,14 @@ const notebookSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
     },
+    title: {
+        type: String,
+        default: 'Untitled',
+    },
+    description: {
+        type: String,
+        default: '',
+    },
     notes: [
         {
             type: mongoose.Types.ObjectId,
