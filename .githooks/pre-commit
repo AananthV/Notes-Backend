@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "##### Running pre-commit hook #####"
+
+for file in $(git diff --name-only --staged); do
+        if [[ "$file" =~ .*(.js|.ts)$ ]];     #  this is the snag
+        then
+            npx eslint $file --quiet --fix && git add $file
+            echo "Ran on ${file}"
+        fi
+done;

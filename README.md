@@ -5,20 +5,21 @@ Delta Node Starter - Mongo is a REST API starter for NodeJS and Mongo.
 
 ### Usage
 
-```
+```bash
 $ git clone https://github.com/delta/dns-mongo.git
 $ cd dns-mongo
-$ npm i
+$ git config core.hooksPath .githooks     # setup githooks
+$ yarn
 $ cp default.example.json default.json
 $ cp production.example.json production.json
-$ npm run dev
+$ yarn run dev
 ```
 
 ### Production
 
 ```
-$ npm run build
-$ npm start
+$ yarn run build
+$ yarn start
 ```
 
 ## Usage and Features
