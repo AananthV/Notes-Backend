@@ -3,9 +3,13 @@ import Hyperlink from '../Interfaces/model/hyperlink.interface';
 
 const hyperlinkSchema = new mongoose.Schema({
     key: String,
-    cell: {
+    link: {
         type: mongoose.Types.ObjectId,
-        ref: 'Cell',
+        ref: 'Section',
+    },
+    notebook: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Notebook',
     },
 });
 
