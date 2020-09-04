@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 import Cell from './cell.interface';
 
-interface Section {
+interface Section extends Document {
     _id: string;
     cells: Array<Cell>;
 }
