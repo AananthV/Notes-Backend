@@ -1,9 +1,13 @@
-import Cell from './cell.interface';
+import { Document } from 'mongoose';
 
-interface Hyperlink {
+import Section from './section.interface';
+import Notebook from './notebook.interface';
+
+interface Hyperlink extends Document {
     _id: string;
     key: string;
-    link: Cell;
+    link: Section;
+    notebook: Notebook;
 }
 
 export default Hyperlink;
