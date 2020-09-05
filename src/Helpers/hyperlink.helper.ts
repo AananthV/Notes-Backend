@@ -1,4 +1,5 @@
-import * as mongoose from 'mongoose';
+import { Types } from 'mongoose';
+type ObjectId = Types.ObjectId;
 
 import Section from '../Interfaces/model/section.interface';
 import Notebook from '../Interfaces/model/notebook.interface';
@@ -13,7 +14,7 @@ import hyperlinkModel from '../Models/hyperlink.model';
 export const addHyperlink = async (key: string, link: Section, notebook: Notebook) => {
     const hyperlink = await hyperlinkModel.create({ key: key, link: link, notebook: notebook });
     notebook.links.push(hyperlink);
-    notebook.save();
+    return await notebook.save();
 };
 
 /**
@@ -22,13 +23,13 @@ export const addHyperlink = async (key: string, link: Section, notebook: Noteboo
  * @param {Notebook} notebook
  */
 export const getHyperlink = async (key: string, notebook: Notebook) => {
-    return hyperlinkModel.find({ key: key, notebook: notebook });
+    return await hyperlinkModel.find({ key: key, notebook: notebook });
 };
 
 /**
  * Delete an existing hyperlink
- * @param {mongoose.Types.ObjectId} id
+ * @param {ObjectId} id
  */
-export const deleteHyperlink = async (id: mongoose.Types.ObjectId) => {
-    return hyperlinkModel.deleteOne({ _id: id });
+export const deleteHyperlink = async (id: ObjectId) => {
+    return await hyperlinkModel.deleteOne({ _id: id });
 };
