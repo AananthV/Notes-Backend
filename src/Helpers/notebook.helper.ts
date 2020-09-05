@@ -1,4 +1,5 @@
-import * as mongoose from 'mongoose';
+import { Types } from 'mongoose';
+type ObjectId = Types.ObjectId
 
 import User from '../Interfaces/model/user.interface';
 import notebookModel from '../Models/notebook.model';
@@ -15,25 +16,25 @@ export const createNotebook = async (owner: User, meta: { title?: string; descri
 
 /**
  * Get an existing notebook
- * @param {mongoose.Types.ObjectId} id
+ * @param {ObjectId} id
  */
-export const getNotebook = async (id: mongoose.Types.ObjectId) => {
+export const getNotebook = async (id: ObjectId) => {
     return await notebookModel.findById(id);
 };
 
 /**
  * Edit an existing notebook's metadata
- * @param {mongoose.Types.ObjectId} id
+ * @param {ObjectId} id
  * @param {{title?: string, description?: string}} meta
  */
-export const editNotebookMeta = async (id: mongoose.Types.ObjectId, meta: { title?: string; description?: string }) => {
+export const editNotebookMeta = async (id: ObjectId, meta: { title?: string; description?: string }) => {
     return await notebookModel.update({ _id: id }, { $set: meta });
 };
 
 /**
  * Delete an existing notebook
- * @param {mongoose.Types.ObjectId} id
+ * @param {ObjectId} id
  */
-export const deleteNotebook = async (id: mongoose.Types.ObjectId) => {
+export const deleteNotebook = async (id: ObjectId) => {
     return await notebookModel.deleteOne({ _id: id });
 };
