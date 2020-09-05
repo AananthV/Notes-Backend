@@ -8,6 +8,4 @@ const cellSchema = new mongoose.Schema({
     text: String,
 });
 
-const cellModel = mongoose.model<Cell & mongoose.Document>('Cell', cellSchema);
-
-export default cellModel;
+export default cellSchema;

@@ -1,15 +1,10 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
+import { ObjectId } from 'mongodb'
 import Section from '../Interfaces/model/section.interface';
+import CellSchema from './cell.model';
 
 const sectionSchema = new mongoose.Schema({
-    cells: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: 'Cell',
-        },
-    ],
+    cells: [CellSchema]
 });
 
-const sectionModel = mongoose.model<Section & mongoose.Document>('Section', sectionSchema);
-
-export default sectionModel;
+export default sectionSchema;

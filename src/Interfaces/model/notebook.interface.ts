@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+
 import Note from './note.interface';
 import User from './user.interface';
 import Hyperlink from './hyperlink.interface';
@@ -7,8 +9,8 @@ interface Notebook {
     title: string;
     description: string;
     owner: User;
-    notes: Array<Note>;
-    links: Array<Hyperlink>;
+    notes: Array<mongoose.Schema.Types.ObjectId | Note>;
+    links: Array<mongoose.Schema.Types.ObjectId | Hyperlink>;
 }
 
 export default Notebook;
