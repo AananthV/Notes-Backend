@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import { Types } from 'mongoose'
 
 import Note from './note.interface';
 import User from './user.interface';
@@ -9,8 +9,8 @@ interface Notebook {
     title: string;
     description: string;
     owner: User;
-    notes: Array<mongoose.Schema.Types.ObjectId | Note>;
-    links: Array<mongoose.Schema.Types.ObjectId | Hyperlink>;
+    notes: Array<Types.ObjectId | Note>;
+    links: Array<Types.ObjectId | Hyperlink>;
 }
 
 export default Notebook;

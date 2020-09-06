@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import { Types } from 'mongoose'
 
 import Note from './note.interface'
 import Section from './section.interface';
@@ -6,8 +6,8 @@ import Section from './section.interface';
 interface Hyperlink {
     _id: string;
     key: string;
-    note: mongoose.Types.ObjectId | Note
-    section: mongoose.Types.ObjectId | Section
+    note: Types.ObjectId | Note
+    section: Types.ObjectId | Section
 }
 
 export default Hyperlink;

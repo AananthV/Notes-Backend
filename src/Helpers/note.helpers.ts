@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
 import HyperlinkModel from '../Models/hyperlink.model'
 import NoteModel from '../Models/note.model';
@@ -11,9 +11,9 @@ import NoteMeta from '../Interfaces/helper/noteMeta.interface';
  * @param  {ObjectId} notebookId
  * @param  {{title?:string}} meta
  */
-export const createNote = async (notebookId: mongoose.Types.ObjectId, meta: NoteMeta) => {
+export const createNote = async (notebookId: Types.ObjectId, meta: NoteMeta) => {
     const createdNote = await NoteModel.create({
-        title: meta.title ? meta.title : "Untitled",
+        title: meta.title ? meta.title : "Untitled Note",
         sections: []
     });
     await NotebookModel.updateOne(
@@ -25,10 +25,10 @@ export const createNote = async (notebookId: mongoose.Types.ObjectId, meta: Note
 
 /**
  * Get a note from the database
- * @param  {mongoose.Types.ObjectId} noteId
+ * @param  {Types.ObjectId} noteId
  * @param  {boolean=false} populate
  */
-export const getNote = async (noteId: mongoose.Types.ObjectId) => {
+export const getNote = async (noteId: Types.ObjectId) => {
     const note = await NoteModel.findById(noteId)
     if (note === null) throw new Error('Note not found.')
 
@@ -37,13 +37,13 @@ export const getNote = async (noteId: mongoose.Types.ObjectId) => {
 
 /**
  * Edit the note metadata
- * @param  {mongoose.Types.ObjectId} noteId
+ * @param  {Types.ObjectId} noteId
  * @param  {NoteMeta} meta
  */
-export const editNoteMeta = async (noteId: mongoose.Types.ObjectId, meta: NoteMeta) => {
+export const editNoteMeta = async (noteId: Types.ObjectId, meta: NoteMeta) => {
     const res = await NoteModel.updateOne(
         { _id: noteId },
-        { title: meta.title ? meta.title : "Untitled" }
+        { $set: {title: meta.title ? meta.title : "Untitled" } }
     )
 
     if (res.n === 0) throw new Error('Note not found.')
@@ -53,9 +53,9 @@ export const editNoteMeta = async (noteId: mongoose.Types.ObjectId, meta: NoteMe
 
 /**
  * Delete a Note
- * @param  {mongoose.Types.ObjectId} noteId
+ * @param  {Types.ObjectId} noteId
  */
-export const deleteNote = async (noteId: mongoose.Types.ObjectId) => {
+export const deleteNote = async (noteId: Types.ObjectId) => {
     // Delete note
     const res = await NoteModel.deleteOne({ _id: noteId })
     
@@ -69,11 +69,11 @@ export const deleteNote = async (noteId: mongoose.Types.ObjectId) => {
 
 /**
  * Rearrange sections in a note
- * @param  {mongoose.Types.ObjectId} noteId
+ * @param  {Types.ObjectId} noteId
  * @param  {number} index1
  * @param  {number} index2
  */
-export const swapSectionssInNote = async (noteId: mongoose.Types.ObjectId, index1: number, index2: number) => {
+export const swapSectionssInNote = async (noteId: Types.ObjectId, index1: number, index2: number) => {
     const note = await getNote(noteId)
 
     if (index1 < 0 || index1 >= note.sections.length || index2 < 0 || index2 >= note.sections.length)
