@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { ObjectId } from 'mongodb'
 
 import Note from '../Interfaces/model/note.interface';
-import SectionSchema from './section.model'
+import SectionSchema from './section.schema'
 
 const noteSchema = new mongoose.Schema({
     title: {
