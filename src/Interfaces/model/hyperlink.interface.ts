@@ -1,9 +1,13 @@
-import Cell from './cell.interface';
+import { Types } from 'mongoose'
+
+import Note from './note.interface'
+import Section from './section.interface';
 
 interface Hyperlink {
     _id: string;
     key: string;
-    link: Cell;
+    note: Types.ObjectId | Note
+    section: Types.ObjectId | Section
 }
 
 export default Hyperlink;
