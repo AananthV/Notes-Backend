@@ -11,25 +11,41 @@ import NotebookModel from '../Models/notebook.model';
  * @param {{title?: string, description?: string}} meta
  */
 export const createNotebook = async (owner: User, meta: NotebookMeta) => {
-    let notebook = new NotebookModel({ ...meta, owner: owner, notes: [], links: [] });
-    return await NotebookModel.create(notebook);
+    return await NotebookModel.create({   
+            title: meta.title ? meta.title : "Untitled Notebook",
+            description: meta.description ? meta.description : "", 
+            owner: owner, 
+            notes: [], 
+            links: [] 
+    });
 };
 
 /**
- * Get an existing notebook
+ * Get an existing notebook. Seting populate to true will populate the titles of the notes.
  * @param {ObjectId} id
+ * @param {boolean} populate
  */
-export const getNotebook = async (id: ObjectId) => {
-    return await NotebookModel.findById(id);
+export const getNotebook = async (id: ObjectId, populate: boolean = true) => {
+    const notebook = await NotebookModel.findById(id);
+    
+    if (notebook === null) throw new Error('Notebook not found.');
+
+    if (populate) await notebook.populate('notes', 'title').execPopulate()
+
+    return notebook;
 };
 
 /**
  * Edit an existing notebook's metadata
  * @param {ObjectId} id
- * @param {{title?: string, description?: string}} meta
+ * @param {NotebookMeta} meta
  */
 export const editNotebookMeta = async (id: ObjectId, meta: NotebookMeta) => {
-    return await NotebookModel.update({ _id: id }, { $set: meta });
+    const res = await NotebookModel.update({ _id: id }, { $set: meta });
+
+    if (res.n === 0) throw new Error('Notebook not found.')
+
+    return true
 };
 
 /**
@@ -37,5 +53,9 @@ export const editNotebookMeta = async (id: ObjectId, meta: NotebookMeta) => {
  * @param {ObjectId} id
  */
 export const deleteNotebook = async (id: ObjectId) => {
-    return await NotebookModel.deleteOne({ _id: id });
+    const res = await NotebookModel.deleteOne({ _id: id });
+
+    if (res.deletedCount === 0) throw new Error('Note not found.');
+
+    return true;
 };

@@ -1,7 +1,8 @@
+import { Document } from 'mongoose'
+
 import Cell from './cell.interface';
 
-interface Hyperlink {
-    _id: string;
+interface Hyperlink extends Document {
     key: string;
     link: Cell;
 }
