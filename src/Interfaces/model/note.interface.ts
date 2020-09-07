@@ -1,7 +1,8 @@
+import { Document } from 'mongoose'
+
 import Section from './section.interface';
 
-interface Note {
-    _id: string;
+interface Note extends Document {
     title: string;
     sections: Array<Section>;
 }

@@ -3,6 +3,6 @@ dist/
 build/
 logs/logs*
 package-lock.json
-config/production.json
-config/default.json
+config/production.js
+config/default.js
 server.js
