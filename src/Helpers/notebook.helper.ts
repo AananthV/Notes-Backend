@@ -1,22 +1,22 @@
 import { Types } from 'mongoose';
-type ObjectId = Types.ObjectId
+type ObjectId = Types.ObjectId;
 
 import User from '../Interfaces/model/user.interface';
-import NotebookMeta from '../Interfaces/helper/notebookMeta.interface'
+import NotebookMeta from '../Interfaces/helper/notebookMeta.interface';
 import NotebookModel from '../Models/notebook.model';
 
 /**
  * Create a new notebook
  * @param {User} owner
- * @param {{title?: string, description?: string}} meta
+ * @param {NotebookMeta} meta
  */
 export const createNotebook = async (owner: User, meta: NotebookMeta) => {
-    return await NotebookModel.create({   
-            title: meta.title ? meta.title : "Untitled Notebook",
-            description: meta.description ? meta.description : "", 
-            owner: owner, 
-            notes: [], 
-            links: [] 
+    return await NotebookModel.create({
+        title: meta.title ? meta.title : 'Untitled Notebook',
+        description: meta.description ? meta.description : '',
+        owner: owner,
+        notes: [],
+        links: [],
     });
 };
 
@@ -25,12 +25,12 @@ export const createNotebook = async (owner: User, meta: NotebookMeta) => {
  * @param {ObjectId} id
  * @param {boolean} populate
  */
-export const getNotebook = async (id: ObjectId, populate: boolean = true) => {
+export const getNotebook = async (id: ObjectId, populate = true) => {
     const notebook = await NotebookModel.findById(id);
-    
+
     if (notebook === null) throw new Error('Notebook not found.');
 
-    if (populate) await notebook.populate('notes', 'title').execPopulate()
+    if (populate) await notebook.populate('notes', 'title').execPopulate();
 
     return notebook;
 };
@@ -43,9 +43,9 @@ export const getNotebook = async (id: ObjectId, populate: boolean = true) => {
 export const editNotebookMeta = async (id: ObjectId, meta: NotebookMeta) => {
     const res = await NotebookModel.update({ _id: id }, { $set: meta });
 
-    if (res.n === 0) throw new Error('Notebook not found.')
+    if (res.n === 0) throw new Error('Notebook not found.');
 
-    return true
+    return true;
 };
 
 /**
