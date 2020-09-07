@@ -1,10 +1,10 @@
-import { Document } from 'mongoose'
-
 import Section from './section.interface';
+import { Document, Types } from 'mongoose';
 
 interface Note extends Document {
     title: string;
-    sections: Array<Section>;
+    sections: Types.DocumentArray<Section>;
 }
 
+export type NoteDocument = Note & Document;
 export default Note;
