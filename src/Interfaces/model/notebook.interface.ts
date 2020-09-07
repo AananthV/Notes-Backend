@@ -1,4 +1,4 @@
-import { Document } from 'mongoose'
+import { Document, Types } from 'mongoose'
 
 import Note from './note.interface';
 import User from './user.interface';
@@ -8,8 +8,8 @@ interface Notebook extends Document {
     title: string;
     description: string;
     owner: User;
-    notes: Array<Note>;
-    links: Array<Hyperlink>;
+    notes: Array<Types.ObjectId | Note>;
+    links: Array<Types.ObjectId | Hyperlink>;
 }
 
 export default Notebook;

@@ -1,10 +1,12 @@
-import { Document } from 'mongoose'
+import { Document, Types } from 'mongoose'
 
-import Cell from './cell.interface';
+import Note from './note.interface'
+import Section from './section.interface';
 
 interface Hyperlink extends Document {
     key: string;
-    link: Cell;
+    note: Types.ObjectId | Note
+    section: Types.ObjectId | Section
 }
 
 export default Hyperlink;

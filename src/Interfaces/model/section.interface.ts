@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 import Cell from './cell.interface';
 
 interface Section {
