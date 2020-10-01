@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 
 import Notebook from '../Interfaces/model/notebook.interface';
-import NoteModel from './note.model'
-import HyperlinkModel from './hyperlink.model'
+import NoteModel from './note.model';
+import HyperlinkModel from './hyperlink.model';
 
 const notebookSchema = new mongoose.Schema({
     owner: {
@@ -31,18 +31,18 @@ const notebookSchema = new mongoose.Schema({
     ],
 });
 
-type NotebookDocument = Notebook & mongoose.Document
+type NotebookDocument = Notebook & mongoose.Document;
 
 notebookSchema.post('deleteOne', async (doc: NotebookDocument) => {
     await Promise.all([
         NoteModel.deleteMany({
-            _id: { $in: doc.notes }
+            _id: { $in: doc.notes },
         }),
         HyperlinkModel.deleteMany({
-            _id: { $in: doc.links }
-        })
-    ])
-})
+            _id: { $in: doc.links },
+        }),
+    ]);
+});
 
 const notebookModel = mongoose.model<NotebookDocument>('Notebook', notebookSchema);
 

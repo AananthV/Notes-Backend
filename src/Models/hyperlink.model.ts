@@ -10,7 +10,7 @@ const hyperlinkSchema = new mongoose.Schema({
     section: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Note.section',
-    }
+    },
 });
 
 const hyperlinkModel = mongoose.model<Hyperlink & mongoose.Document>('Hyperlink', hyperlinkSchema);
