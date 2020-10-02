@@ -1,5 +1,5 @@
 interface NoteMeta {
-    title?: string
+    title?: string;
 }
 
-export default NoteMeta
+export default NoteMeta;

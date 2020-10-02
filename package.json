@@ -7,7 +7,7 @@
     "dev": "ts-node src/server.ts",
     "start": "ts-node dist/server.js",
     "build": "tsc -p .",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "lint:check": "eslint '*/**/*.{js,ts,tsx}' --quiet"
   },
   "keywords": [],

@@ -1,5 +1,5 @@
 interface NotebookMeta {
-    title?: string; 
+    title?: string;
     description?: string;
 }
 
